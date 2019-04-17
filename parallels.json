@@ -1,28 +1,25 @@
 {
     "variables": {
+        "client_id": null,
+        "client_secret": null,
+        "subscription_id": null
     },
-    "builders": [{
-        "type": "parallels-iso",
-        "guest_os_type": "win-2016",
-        "parallels_tools_flavor": "win",
-        "communicator": "winrm",
-        "winrm_username": "vagrant",
-        "winrm_password": "vagrant",
-        "disk_size": 61440,
-        "iso_url": "en_windows_server_version_1803_x64_dvd_12063476.iso",
-        "iso_checksum": "1f396b448ae0a68e5a2f694b0afabb61498e20a5df38c874aacb4e940a661b61",
-        "iso_checksum_type": "sha256",
-        "prlctl": [
-            ["set", "{{.Name}}", "--memsize", "1024"],
-            ["set", "{{.Name}}", "--cpus", "2"],
-            ["set", "{{.Name}}", "--efi-boot", "off"]
-        ],
-        "floppy_files": [
-            "autounattend.xml",
-            "winrm.ps1"
-        ],
-        "shutdown_command": "C:/windows/system32/sysprep/sysprep.exe /generalize /oobe /quiet /shutdown"
-    }],
+    "builders": [
+        {
+            "type": "azure-arm",
+            "client_id": "{{user `client_id`}}",
+            "client_secret": "{{user `client_secret`}}",
+            "subscription_id": "{{user `subscription_id`}}",
+            "vm_size": "Standard_DS2_v2",
+            "managed_image_name": "packer-demo",
+            "build_resource_group_name": "packer-demo",
+            "managed_image_resource_group_name": "packer-demo",
+            "os_type": "Windows",
+            "image_publisher": "MicrosoftWindowsServer",
+            "image_offer": "WindowsServer",
+            "image_sku": "2016-Datacenter"
+        }
+    ],
     "provisioners": [
         {
             "type": "powershell",
